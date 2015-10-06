@@ -1,0 +1,43 @@
+var sliderTimeoutId;
+var $scrollCount = 0;
+var $Timer_Stared = true;
+var $duration = 9000;
+$('#fullpage').fullpage({
+	css3: true,
+	menu: '#header',
+	navigation: true,
+	autoScrolling:true,
+	
+	afterRender: function(anchorLink, index){
+		if ($('#fullpage').hasClass('auto-scroll') ){
+			sliderTimeoutId = setTimeout(function() {
+				$Timer_Stared = false;
+				$.fn.fullpage.moveTo( 2 , 0);
+				$Timer_Stared = true;
+			}, $duration);
+			$Timer_Stared = true;
+		};
+		
+	},
+	
+	onLeave: function(index, nextIndex, direction){
+		if ( $Timer_Stared == true ){
+			clearTimeout(sliderTimeoutId);
+		} else {
+			var sectionCount = 0;
+			$('.section').each( function() {
+				sectionCount ++;
+			});
+			sliderTimeoutId = setTimeout(function() {
+				if (nextIndex == sectionCount) {
+					$Timer_Stared = true;
+					$.fn.fullpage.moveTo( 1 , 0);
+				} else {
+					$Timer_Stared = false;
+					$.fn.fullpage.moveTo( nextIndex+1 , 0);
+					$Timer_Stared = true;
+				};
+			}, $duration);
+		};
+	};
+});
